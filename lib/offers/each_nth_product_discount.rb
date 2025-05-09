@@ -1,10 +1,10 @@
 module Offers
   class EachNthProductDiscount
-    attr_reader :product_code, :discount_quantity, :discount_percents
+    attr_reader :product_code, :per_product, :discount_percents
 
-    def initialize(product_code:, discount_quantity:, discount_percents:)
+    def initialize(product_code:, per_product:, discount_percents:)
       @product_code = product_code
-      @discount_quantity = discount_quantity
+      @per_product = per_product
       @discount_percents = discount_percents
     end
 
@@ -14,9 +14,9 @@ module Offers
       return 0 if products.empty?
 
       product_price = products.first.price
+      discountable_quantity = products.size / per_product
 
-      discountable_quantity = products.size / discount_quantity
-      (discountable_quantity * product_price * (discount_percents * 0.01)).to_i
+      (discountable_quantity * product_price * 0.01 * discount_percents).round
     end
   end
 end

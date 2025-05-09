@@ -16,7 +16,7 @@ describe Deliveries::Calculator do
     let(:rules) { [] }
 
     it 'raises an ArgumentError' do
-      expect { calculator }.to raise_error(ArgumentError, "Rule with minimal price required")
+      expect { calculator }.to raise_error(ArgumentError, 'Rule with minimal price required')
     end
   end
 
