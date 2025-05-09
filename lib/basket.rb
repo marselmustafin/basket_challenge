@@ -18,9 +18,7 @@ class Basket
   end
 
   def total_price
-    total = 0
-
-    return total if products.empty?
+    return 0 if products.empty?
 
     total = products.sum(&:price)
     total -= offers_discount(products)
