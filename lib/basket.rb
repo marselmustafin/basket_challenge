@@ -1,10 +1,12 @@
 class Basket
-  private attr_reader :products
-  attr_reader :product_catalog
+  attr_reader :products, :catalog, :offers, :delivery_rules
 
-  def initialize(product_catalog)
-    @product_catalog = []
+  def initialize(delivery_rules:, catalog: [], offers: [])
     @products = []
+
+    @catalog = catalog
+    @offers = offers
+    @delivery_rules = delivery_rules
   end
 
   def add_product(product_code)
@@ -24,12 +26,13 @@ class Basket
     total = total - offers_discount(products)
     total = total + delivery_charge(total)
 
-    total
+    [total, 0].max
   end
 
   private
 
   def offers_discount(products)
+    offers.map { |offer| offer.discount_for(products) }.sum
   end
 
   def delivery_charge(total)
