@@ -1,18 +1,18 @@
 class Basket
-  attr_reader :products, :catalog, :offers, :delivery_rules
+  attr_reader :products, :catalog, :offers, :delivery_calculator
 
-  def initialize(delivery_rules:, catalog: [], offers: [])
+  def initialize(catalog:, delivery_calculator:, offers: [])
     @products = []
 
     @catalog = catalog
     @offers = offers
-    @delivery_rules = delivery_rules
+    @delivery_calculator = delivery_calculator
   end
 
   def add_product(product_code)
-    product = product_catalog.find { |p| p.code == product_code }
+    product = catalog.find { |p| p.code == product_code }
 
-    raise "Product not found" unless product
+    raise ArgumentError, 'Product not found' unless product
 
     products << product
   end
@@ -23,8 +23,8 @@ class Basket
     return total if products.empty?
 
     total = products.sum(&:price)
-    total = total - offers_discount(products)
-    total = total + delivery_charge(total)
+    total -= offers_discount(products)
+    total += delivery_charge(total)
 
     [total, 0].max
   end
@@ -36,5 +36,6 @@ class Basket
   end
 
   def delivery_charge(total)
+    delivery_calculator.calculate_for(total)
   end
 end
